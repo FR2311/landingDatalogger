@@ -1,0 +1,1124 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Documento del proyecto DataLogger: propósito, alcance, responsables, requisitos, planificación y apartados pendientes."
+    />
+    <meta name="theme-color" content="#164b91" />
+    <title>Documento del proyecto — DataLogger ESP32</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body id="arriba" class="detail-page">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Iconos vectoriales locales: no requieren librerías ni conexiones externas. -->
+    <svg
+      class="svg-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-chip" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+          <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+          <rect x="9" y="9" width="6" height="6" rx="1" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-temp" viewBox="0 0 24 24">
+          <path d="M9 14.5V5a3 3 0 0 1 6 0v9.5a5 5 0 1 1-6 0Z" />
+          <path d="M12 8v9m6-11h3m-3 4h2" />
+          <circle cx="12" cy="18" r="1" />
+        </symbol>
+        <symbol id="i-drop" viewBox="0 0 24 24">
+          <path d="M12 3S5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12Z" />
+          <path d="M9 15a3 3 0 0 0 3 3" />
+        </symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24">
+          <path d="M4 19a10 10 0 1 1 16 0H4Z" />
+          <path d="m12 14 4-5M5 12h2m10 0h2M12 4v3" />
+          <circle cx="12" cy="14" r="1" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-sd" viewBox="0 0 24 24">
+          <path
+            d="M8 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7l4-4Z"
+          />
+          <path d="M9 3v5m4-5v5m4-5v5M8 16h8" />
+        </symbol>
+        <symbol id="i-screen" viewBox="0 0 24 24">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <path d="M8 21h8m-4-4v4M6 12l4-4 4 3 4-5" />
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 24 24">
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"
+          />
+          <path d="M14 2v6h6M8 13h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path
+            d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"
+          />
+        </symbol>
+        <symbol id="i-pulse" viewBox="0 0 24 24">
+          <path d="M2 12h5l3-8 4 16 3-8h5" />
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24">
+          <path
+            d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0"
+          />
+          <circle cx="12" cy="20" r=".5" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24">
+          <path d="m7 6-6 6 6 6m10-12 6 6-6 6M14 3l-4 18" />
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 24 24">
+          <path
+            d="M9 19c-4 1-4-2-6-2m12 5v-4a3.5 3.5 0 0 0-1-2.7c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.3 4 5.3 5.3 0 0 0 19.2 0S18 0 15 1.6a14 14 0 0 0-6 0C6 0 4.8 0 4.8 0A5.3 5.3 0 0 0 4.7 4 5.7 5.7 0 0 0 3.2 8c0 5.7 3.5 6.9 6.8 7.3A3.5 3.5 0 0 0 9 18v4"
+            transform="translate(1 2) scale(.9)"
+          />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 22v-3a8 8 0 0 1 16 0v3" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a
+          class="brand"
+          href="index.html#inicio"
+          aria-label="DataLogger, inicio"
+          ><span class="brand-mark"
+            ><svg><use href="#i-pulse" /></svg></span
+          >DataLogger<span class="brand-dot">.</span></a
+        >
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Abrir menú"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="main-nav" class="main-nav" aria-label="Navegación principal">
+          <a href="index.html#inicio">Inicio</a
+          ><a href="index.html#proyecto">Proyecto</a
+          ><a href="index.html#funciones">Funciones</a
+          ><a href="index.html#arquitectura">Arquitectura</a
+          ><a href="index.html#hardware">Hardware</a
+          ><a href="interfaz.html">Interfaz</a
+          ><a href="quick-start.html">Quick Start</a
+          ><a href="manual.html">Manual</a
+          ><a href="documentacion.html">Documentación</a
+          ><a href="faq.html">FAQ</a><a href="index.html#equipo">Equipo</a
+          ><a
+            class="nav-github"
+            href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <header class="page-intro">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Ubicación">
+            <a href="index.html">Inicio</a><span aria-hidden="true">/</span
+            ><a href="documentacion.html">Documentación</a
+            ><span aria-hidden="true">/</span
+            ><span>Documento del proyecto</span>
+          </nav>
+          <p class="eyebrow">DATALOGGER / MEMORIA DEL PROYECTO</p>
+          <h1>Del propósito a los requisitos.</h1>
+          <p class="page-lead">
+            El documento de trabajo del equipo, organizado para su consulta:
+            contexto, alcance, responsabilidades y planificación del DataLogger.
+          </p>
+          <div class="report-status">
+            <span>BORRADOR DE TRABAJO</span
+            ><span>Registros de agosto de 2026</span>
+          </div>
+        </div>
+      </header>
+      <div class="container report-context">
+        <strong>Cómo leer este documento</strong>
+        <p>
+          Esta adaptación conserva la numeración y el contenido del texto
+          recibido. Las notas internas se presentan como tareas pendientes; los
+          apartados sin desarrollar se mantienen identificados. El original
+          completo puede descargarse sin cambios.
+        </p>
+        <p>
+          El planteo inicial menciona un servidor del laboratorio, MQTT y
+          archivos XLS/XLSX. La versión local descrita en el resto del sitio
+          utiliza HTTP y CSV. Esta diferencia está pendiente de conciliación
+          documental: los requisitos y las mejoras previstas no se presentan
+          como prestaciones verificadas.
+        </p>
+      </div>
+      <div class="container report-layout">
+        <aside class="report-sidebar">
+          <nav aria-label="Índice del documento">
+            <p class="eyebrow">EN ESTE DOCUMENTO</p>
+            <a href="#control-cambios">Control de cambios</a>
+            <details class="report-toc-group" open>
+              <summary>2 · Introducción</summary>
+              <a href="#doc-2">Ver sección</a
+              ><a href="#doc-2-1">2.1 Propósito</a
+              ><a href="#doc-2-2">2.2 Alcance</a
+              ><a href="#doc-2-3">2.3 Personal involucrado</a
+              ><a href="#doc-2-4">2.4 Glosario</a
+              ><a href="#doc-2-5">2.5 Referencias</a
+              ><a href="#doc-2-6">2.6 Resumen ejecutivo</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>3 · Descripción general</summary>
+              <a href="#doc-3">Ver sección</a
+              ><a href="#doc-3-1">3.1 Contexto del producto</a
+              ><a href="#doc-3-2">3.2 Funcionalidad del producto</a
+              ><a href="#doc-3-3">3.3 Características de los usuarios</a
+              ><a href="#doc-3-4">3.4 Restricciones</a
+              ><a href="#doc-3-5">3.5 Suposiciones y dependencias</a
+              ><a href="#doc-3-6">3.6 Evolución previsible del sistema</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>4 · Requisitos específicos</summary>
+              <a href="#doc-4">Ver sección</a
+              ><a href="#doc-4-1">4.1 Requerimientos funcionales</a
+              ><a href="#doc-4-2">4.2 Detalle de requisitos</a
+              ><a href="#doc-4-3">4.3 Apartado por definir</a
+              ><a href="#doc-4-4">4.4 Interfaces de software</a
+              ><a href="#doc-4-5">4.5 Interfaces de comunicación</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>5 · Oferta de gestión</summary>
+              <a href="#doc-5">Ver sección</a><a href="#doc-5-1">5.1 Gantt</a
+              ><a href="#doc-5-2">5.2 Infraestructura administrativa</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>6 · Oferta económica</summary>
+              <a href="#doc-6">Ver sección</a
+              ><a href="#doc-6-1">6.1 Proveedores de Internet</a
+              ><a href="#doc-6-2">6.2 Proveedores de insumos electrónicos</a
+              ><a href="#doc-6-3">6.3 Proveedores de insumos varios</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>7 · Estimación económica</summary>
+              <a href="#doc-7">Ver sección</a>
+            </details>
+            <details class="report-toc-group">
+              <summary>8 · Contrato</summary>
+              <a href="#doc-8">Ver sección</a
+              ><a href="#doc-8-1">8.1 Objetivo del proyecto</a
+              ><a href="#doc-8-2">8.2 Partes involucradas</a
+              ><a href="#doc-8-3">8.3 Alcance del proyecto</a
+              ><a href="#doc-8-4">8.4 Plazos</a
+              ><a href="#doc-8-5">8.5 Responsabilidades</a
+              ><a href="#doc-8-6">8.6 Criterios de aceptación</a
+              ><a href="#doc-8-7">8.7 Condiciones de modificación</a
+              ><a href="#doc-8-8">8.8 Firmas</a>
+            </details>
+          </nav>
+          <a
+            class="report-source"
+            href="assets/documents/documentacion-original.txt"
+            download
+            >Descargar texto original ↓</a
+          >
+        </aside>
+        <article class="project-report">
+          <section id="control-cambios" class="report-chapter">
+            <p class="eyebrow">REGISTRO DOCUMENTAL</p>
+            <h2>Control de cambios</h2>
+            <p>
+              Integrantes incluidos en el registro: Valentino Dabbah, Malena
+              Mazzarone, Felipe Risoli, Santiago Puleo y Marco Varilni. La
+              leyenda original usa puntos sin una atribución legible por fila.
+            </p>
+            <div
+              class="document-table-wrap"
+              role="region"
+              aria-label="Historial de edición"
+              tabindex="0"
+            >
+              <table>
+                <caption>
+                  Historial de edición
+                </caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Integrante</th>
+                    <th scope="col">Cambio realizado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">03/08/2026</th>
+                    <td>No indicado</td>
+                    <td>
+                      Comienzo de la documentación Word; realización del
+                      apartado 2.1.
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">07/08/2026</th>
+                    <td>No indicado</td>
+                    <td>
+                      Realización de los apartados 2.2 y 2.3; comienzo del 2.4.
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">10/08/2026</th>
+                    <td>No indicado</td>
+                    <td>
+                      Continuación del 2.4; comienzo del 2.5; realización de los
+                      apartados 2.6, 3.1, 3.2 y 3.3.
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">11/08/2026</th>
+                    <td>No indicado</td>
+                    <td>Realización de los apartados 3.4 y 3.4.1 a 3.4.6.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">13/08/2026</th>
+                    <td>No indicado</td>
+                    <td>Realización de los apartados 3.4.7, 3.4.8 y 3.4.9.</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">14/08/2026</th>
+                    <td>No indicado</td>
+                    <td>Realización de los apartados 3.5 y 3.6.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="report-footnote">
+              La fecha «10/082026» del original se normalizó a 10/08/2026. No se
+              asignaron autores a las filas que no los especifican.
+            </p>
+          </section>
+          <section id="doc-2" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 2</p>
+            <h2>Introducción</h2>
+            <section id="doc-2-1" class="report-subsection">
+              <h3><span>2.1</span> Propósito</h3>
+              <p>
+                El proyecto surge de una necesidad del INTI (Instituto Nacional
+                de Tecnología Industrial): visualizar de manera sencilla y
+                técnica las condiciones ambientales registradas durante las
+                pruebas de laboratorio con robots.
+              </p>
+              <p>
+                El planteo inicial ubica un DataLogger dentro de la jaula del
+                robot, en un punto específico, para medir temperatura, humedad y
+                presión. Propone enviar los datos a un servidor del laboratorio
+                mediante MQTT y una red que el texto denomina «mosquito». El
+                servidor alojaría una web que leería archivos .xlsx y
+                presentaría su contenido en un dashboard.
+              </p>
+            </section>
+            <section id="doc-2-2" class="report-subsection">
+              <h3><span>2.2</span> Alcance</h3>
+              <p>
+                El alcance se expresa mediante los siguientes requerimientos
+                funcionales y no funcionales. Son objetivos definidos en el
+                documento, no resultados de validación.
+              </p>
+              <h4>Requerimientos funcionales</h4>
+              <dl class="document-definitions">
+                <div>
+                  <dt>Adquisición de datos</dt>
+                  <dd>
+                    El sistema debe medir temperatura, humedad y presión en
+                    tiempo real a través de sensores.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Transmisión de datos</dt>
+                  <dd>
+                    El sistema debe enviar los datos de forma inalámbrica
+                    utilizando el protocolo MQTT.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Almacenamiento local</dt>
+                  <dd>
+                    El sistema debe guardar los datos en una tarjeta SD en
+                    formato .xls para análisis posterior.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Visualización de datos</dt>
+                  <dd>
+                    El sistema debe mostrar los datos en una interfaz web en
+                    tiempo real con gráficas y valores numéricos.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Configuración del sistema</dt>
+                  <dd>
+                    El sistema debe permitir configurar parámetros como
+                    frecuencia de muestreo, umbrales de alarmas y credenciales
+                    MQTT.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Alertas y notificaciones</dt>
+                  <dd>
+                    El sistema debe generar alertas visuales en la interfaz web
+                    cuando los valores estén fuera de rango.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Exportación de datos</dt>
+                  <dd>
+                    El sistema debe permitir descargar los datos almacenados en
+                    la tarjeta SD desde la interfaz web.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Autonomía del sistema</dt>
+                  <dd>
+                    El sistema debe poder operar de forma autónoma alimentado
+                    por batería.
+                  </dd>
+                </div>
+              </dl>
+              <h4>Requerimientos no funcionales</h4>
+              <dl class="document-definitions">
+                <div>
+                  <dt>Confiabilidad</dt>
+                  <dd>
+                    El sistema debe funcionar de manera continua y estable, sin
+                    pérdida de datos.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Rendimiento</dt>
+                  <dd>
+                    El sistema debe transmitir y mostrar los datos en tiempo
+                    real con una latencia menor a 2 segundos.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Eficiencia energética</dt>
+                  <dd>
+                    El sistema debe maximizar la duración de la batería
+                    optimizando el consumo de energía.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Seguridad</dt>
+                  <dd>
+                    El sistema debe autenticar el acceso a la interfaz web
+                    mediante usuario y contraseña.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Integridad de datos</dt>
+                  <dd>
+                    El sistema debe garantizar que los datos almacenados y
+                    transmitidos no se corrompan ni se pierdan.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Mantenibilidad</dt>
+                  <dd>
+                    El sistema debe ser fácil de actualizar y mantener tanto en
+                    hardware como en software.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Usabilidad</dt>
+                  <dd>
+                    La interfaz web debe ser intuitiva, clara y adaptable a
+                    diferentes dispositivos.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Resistencia ambiental</dt>
+                  <dd>
+                    El hardware debe resistir condiciones de laboratorio,
+                    variaciones de temperatura y humedad.
+                  </dd>
+                </div>
+              </dl>
+            </section>
+            <section id="doc-2-3" class="report-subsection">
+              <h3><span>2.3</span> Personal involucrado</h3>
+              <div
+                class="document-table-wrap"
+                role="region"
+                aria-label="Responsables y cargos asignados"
+                tabindex="0"
+              >
+                <table>
+                  <caption>
+                    Responsables y cargos asignados
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Responsable</th>
+                      <th scope="col">ID</th>
+                      <th scope="col">Cargo</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Valentino Dabbah</th>
+                      <td>PM</td>
+                      <td>Project Manager</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Valentino Dabbah</th>
+                      <td>D03</td>
+                      <td>Desarrollador 03 · Front End</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Valentino Dabbah</th>
+                      <td>IM</td>
+                      <td>Encargado de infraestructura de MCU</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Santiago Puleo</th>
+                      <td>D01</td>
+                      <td>Desarrollador 01 · Back End</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Santiago Puleo</th>
+                      <td>IR</td>
+                      <td>Encargado de infraestructura de red</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Felipe Risoli</th>
+                      <td>D02</td>
+                      <td>Desarrollador 02 · Back End</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Felipe Risoli</th>
+                      <td>BD</td>
+                      <td>Administrador de base de datos</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Marco Varilni</th>
+                      <td>DUX02</td>
+                      <td>Diseñador 02 UX/UI</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Marco Varilni</th>
+                      <td>ELE</td>
+                      <td>Encargado de electrónica</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Marco Varilni</th>
+                      <td>IM</td>
+                      <td>Encargado de infraestructura de MCU</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Malena Mazzarone</th>
+                      <td>MUL</td>
+                      <td>Encargada de multimedios</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Malena Mazzarone</th>
+                      <td>DuX01</td>
+                      <td>Diseñadora 01 UX/UI</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            <section id="doc-2-4" class="report-subsection">
+              <h3><span>2.4</span> Glosario</h3>
+              <dl class="document-definitions">
+                <div>
+                  <dt>INTI</dt>
+                  <dd>Instituto Nacional de Tecnologia Industrial</dd>
+                </div>
+                <div>
+                  <dt>LABI</dt>
+                  <dd>Laboratorio de robotica del INTI</dd>
+                </div>
+                <div>
+                  <dt>mA</dt>
+                  <dd>Miliamperios</dd>
+                </div>
+              </dl>
+            </section>
+            <section id="doc-2-5" class="report-subsection">
+              <h3><span>2.5</span> Referencias</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>No se incluyeron referencias en el
+                documento de origen.
+              </p>
+            </section>
+            <section id="doc-2-6" class="report-subsection">
+              <h3><span>2.6</span> Resumen ejecutivo</h3>
+              <p>
+                El objetivo es desarrollar un DataLogger autónomo, alimentado
+                por batería, que se comunique con el servidor del laboratorio.
+                En ese servidor se alojaría una página web para que los
+                integrantes del laboratorio consulten el estado de las variables
+                medidas.
+              </p>
+            </section>
+          </section>
+          <section id="doc-3" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 3</p>
+            <h2>Descripción general</h2>
+            <section id="doc-3-1" class="report-subsection">
+              <h3><span>3.1</span> Contexto del producto</h3>
+              <p>
+                En el laboratorio de robótica del INTI, el producto forma parte
+                de un sistema mayor. El documento prevé entregar un DataLogger
+                inicialmente y contempla que, con el tiempo, nuevos equipos
+                puedan conectarse al mismo servidor del LABI para ser
+                monitoreados de forma remota por su personal.
+              </p>
+            </section>
+            <section id="doc-3-2" class="report-subsection">
+              <h3><span>3.2</span> Funcionalidad del producto</h3>
+              <p>
+                La funcionalidad principal es permitir al equipo del LABI
+                monitorear remotamente las mediciones ambientales obtenidas
+                durante las pruebas y ensayos realizados con los robots y el
+                material del laboratorio.
+              </p>
+            </section>
+            <section id="doc-3-3" class="report-subsection">
+              <h3><span>3.3</span> Características de los usuarios</h3>
+              <div
+                class="document-table-wrap"
+                role="region"
+                aria-label="Perfil del usuario previsto"
+                tabindex="0"
+              >
+                <table>
+                  <caption>
+                    Perfil del usuario previsto
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">Aspecto</th>
+                      <th scope="col">Descripción</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">Tipo de usuario</th>
+                      <td>
+                        Director del laboratorio de robótica del Instituto
+                        Nacional de Tecnología Industrial
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Formacion</th>
+                      <td>
+                        Técnico en electrónica, Técnico superior en
+                        automatización y robótica, Profesor en disciplinas
+                        industriales especializado en automatización y robótica,
+                        Especialista en calidad industrial.
+                      </td>
+                    </tr>
+                    <tr>
+                      <th scope="row">Actividades</th>
+                      <td>
+                        Realización de pruebas y ensayos con los robots del
+                        laboratorio, creacion y direccion de prácticas
+                        universitarias, armado de rúbricas y guías de robótica
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            <section id="doc-3-4" class="report-subsection">
+              <h3><span>3.4</span> Restricciones</h3>
+            </section>
+            <section id="doc-3-4-1" class="report-subsection report-nested">
+              <h4><span>3.4.1</span> Políticas reguladoras</h4>
+              <p>
+                El documento establece que la web del producto será software
+                libre para el equipo del laboratorio.
+              </p>
+              <p class="document-pending">
+                <span>PENDIENTE</span>La redacción de este apartado quedó
+                interrumpida en el original.
+              </p>
+            </section>
+            <section id="doc-3-4-2" class="report-subsection report-nested">
+              <h4><span>3.4.2</span> Limitaciones de hardware</h4>
+              <p>
+                El texto enumera como requisitos mínimos un DataLogger, una
+                batería indicada como «1000 mA», un microprocesador, un circuito
+                integrado que mida temperatura, humedad y presión, una red de
+                comunicación con un servidor y una base de datos.
+              </p>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Falta especificar la base de datos
+                utilizada por Felipe. La unidad de capacidad de la batería
+                también requiere revisión: el original indica 1000 mA.
+              </p>
+            </section>
+            <section id="doc-3-4-3" class="report-subsection report-nested">
+              <h4><span>3.4.3</span> Interfaces con otras aplicaciones</h4>
+              <p>
+                No se definieron interfaces con otras aplicaciones al redactar
+                este apartado.
+              </p>
+            </section>
+            <section id="doc-3-4-4" class="report-subsection report-nested">
+              <h4><span>3.4.4</span> Función de control</h4>
+              <p>
+                Se prevé un único mecanismo de autenticación: acceso mediante
+                usuario y contraseña proporcionados por el director del LABI.
+              </p>
+            </section>
+            <section id="doc-3-4-5" class="report-subsection report-nested">
+              <h4><span>3.4.5</span> Requisitos del lenguaje</h4>
+              <p>
+                La interfaz utiliza español y calendario gregoriano. El idioma
+                no se modifica desde la configuración. El lenguaje técnico
+                aparece en las unidades de las variables medidas y en los
+                códigos RGB de los colores elegidos para las funciones de los
+                gráficos del panel principal.
+              </p>
+            </section>
+            <section id="doc-3-4-6" class="report-subsection report-nested">
+              <h4><span>3.4.6</span> Protocolos señalados</h4>
+              <dl class="document-definitions">
+                <div>
+                  <dt>Red</dt>
+                  <dd>
+                    Se propone MQTT por su bajo consumo de recursos y volumen de
+                    datos; se contempla IP para identificar el servidor donde se
+                    aloja la web.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Web</dt>
+                  <dd>
+                    El documento propone HTTPS para el cifrado e ICMP para
+                    mensajes de error de conexión entre el DataLogger y la web.
+                  </dd>
+                </div>
+              </dl>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Confirmar con Santiago Puleo y Felipe
+                Risoli la viabilidad y la implementación de los protocolos
+                propuestos. El original deja esta validación abierta.
+              </p>
+            </section>
+            <section id="doc-3-4-7" class="report-subsection report-nested">
+              <h4><span>3.4.7</span> Requisitos de fiabilidad</h4>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Realizar pruebas de fiabilidad con el
+                DataLogger.
+              </p>
+            </section>
+            <section id="doc-3-4-8" class="report-subsection report-nested">
+              <h4><span>3.4.8</span> Credibilidad de la aplicación</h4>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Realizar una entrevista con el usuario
+                para evaluar la credibilidad de la aplicación.
+              </p>
+            </section>
+            <section id="doc-3-4-9" class="report-subsection report-nested">
+              <h4><span>3.4.9</span> Consideraciones de seguridad</h4>
+              <p class="document-pending">
+                <span>PENDIENTE</span>El original contiene un marcador sin
+                desarrollar las consideraciones de seguridad.
+              </p>
+            </section>
+            <section id="doc-3-5" class="report-subsection">
+              <h3><span>3.5</span> Suposiciones y dependencias</h3>
+              <p>
+                El documento identifica la continuidad del LABI y la
+                disponibilidad presupuestaria del INTI como dependencias del
+                proyecto. Considera como riesgos una eventual decisión de cierre
+                del área de robótica y dificultades para financiar el trabajo.
+              </p>
+              <div class="document-note">
+                <p>
+                  Estas son hipótesis de riesgo formuladas por los autores en el
+                  borrador. Su valoración política y presupuestaria original se
+                  conserva en el texto descargable; no constituye una
+                  constatación actual del sitio.
+                </p>
+              </div>
+            </section>
+            <section id="doc-3-6" class="report-subsection">
+              <h3><span>3.6</span> Evolución previsible del sistema</h3>
+              <dl class="document-metadata">
+                <div>
+                  <dt>Fecha</dt>
+                  <dd>14/08/2026</dd>
+                </div>
+                <div>
+                  <dt>Integrante</dt>
+                  <dd>Valentino Dabbah</dd>
+                </div>
+              </dl>
+              <p>
+                La mejora prevista era contar, un mes después de la fecha
+                registrada, con el DataLogger funcionando y reconocido por la
+                web. También se planteó notificar a los dispositivos de los
+                trabajadores cuando el equipo se desconectara por causas
+                ambientales o funcionales, incluso con la página cerrada.
+              </p>
+              <div class="document-note">
+                <p>
+                  Se conserva como una previsión del documento, sin afirmar que
+                  esa función esté implementada o validada.
+                </p>
+              </div>
+            </section>
+          </section>
+          <section id="doc-4" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 4</p>
+            <h2>Requisitos específicos</h2>
+            <section id="doc-4-1" class="report-subsection">
+              <h3><span>4.1</span> Requerimientos funcionales</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Diferenciar los requisitos funcionales
+                detallados de la definición general del alcance del punto 2.2.
+                El borrador incluye una consulta interna sobre esta distinción.
+              </p>
+            </section>
+            <section id="doc-4-2" class="report-subsection">
+              <h3><span>4.2</span> Detalle de requisitos</h3>
+              <div
+                class="document-table-wrap"
+                role="region"
+                aria-label="Requisitos registrados"
+                tabindex="0"
+              >
+                <table>
+                  <caption>
+                    Requisitos registrados
+                  </caption>
+                  <thead>
+                    <tr>
+                      <th scope="col">N.º</th>
+                      <th scope="col">Requisito</th>
+                      <th scope="col">Descripción</th>
+                      <th scope="col">Prioridad</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <th scope="row">1</th>
+                      <td>Independencia del usuario</td>
+                      <td>
+                        Sin importar qué usuario entre, el sistema no deberá
+                        cambiar su interfaz.
+                      </td>
+                      <td>No definida</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">2</th>
+                      <td>Usabilidad</td>
+                      <td>
+                        El sistema deberá adaptar su interfaz al tamaño del
+                        dispositivo.
+                      </td>
+                      <td>Media</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">3</th>
+                      <td>Visualización de datos</td>
+                      <td>
+                        La interfaz debe mostrar los datos enviados por el
+                        DataLogger con gráficas y valores numéricos.
+                      </td>
+                      <td>Alta</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">4</th>
+                      <td>Conversiones</td>
+                      <td>
+                        La interfaz debe permitir visualizar los valores
+                        numéricos en distintas unidades de medida, por ejemplo
+                        Celsius y Fahrenheit.
+                      </td>
+                      <td>No definida</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">5</th>
+                      <td>Pendiente</td>
+                      <td>Sin descripción en el original.</td>
+                      <td>No definida</td>
+                    </tr>
+                    <tr>
+                      <th scope="row">6</th>
+                      <td>Pendiente</td>
+                      <td>Sin descripción en el original.</td>
+                      <td>No definida</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </section>
+            <section id="doc-4-3" class="report-subsection">
+              <h3><span>4.3</span> Apartado por definir</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>El apartado 4.3 no tiene título ni
+                contenido en el texto recibido.
+              </p>
+            </section>
+            <section id="doc-4-4" class="report-subsection">
+              <h3><span>4.4</span> Interfaces de software</h3>
+              <dl class="document-definitions">
+                <div>
+                  <dt>Pantalla de inicio de sesión</dt>
+                  <dd>
+                    a través de un usuario y contraseña el administrador podrá
+                    ingresar a los datos proporcionados en la página web
+                  </dd>
+                </div>
+                <div>
+                  <dt>Menú principal</dt>
+                  <dd>
+                    en el menú inicial se encuentran las distintas secciones de
+                    datos disponibles
+                  </dd>
+                </div>
+                <div>
+                  <dt>Botones</dt>
+                  <dd>ejecutan acciones determinadas</dd>
+                </div>
+                <div>
+                  <dt>Formularios</dt>
+                  <dd>a partir de ellos se permiten ingresar información</dd>
+                </div>
+                <div>
+                  <dt>Mensajes de alerta</dt>
+                  <dd>
+                    aparecen en el momento de informar errores o confirman
+                    acciones.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Pantallas de configuración</dt>
+                  <dd>
+                    en esta sección se permiten modificar las preferencias del
+                    usuario.
+                  </dd>
+                </div>
+              </dl>
+            </section>
+            <section id="doc-4-5" class="report-subsection">
+              <h3><span>4.5</span> Interfaces de comunicación</h3>
+              <dl class="document-definitions">
+                <div>
+                  <dt>Comunicación entre sensores y datalogger</dt>
+                  <dd>
+                    los sensores transmitirán las mediciones de temperatura,
+                    humedad y presión al datalogger mediante las interfaces de
+                    comunicación correspondientes.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Comunicación inalámbrica</dt>
+                  <dd>
+                    el datalogger enviará los datos al servidor de manera
+                    inalámbrica, evitando la necesidad de una conexión física.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Protocolo MQTT</dt>
+                  <dd>
+                    se utilizará MQTT como protocolo de mensajería para
+                    transmitir los datos desde el datalogger hacia el servidor.
+                    Este protocolo permite una comunicación eficiente y de bajo
+                    consumo.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Comunicación entre servidor e interfaz web</dt>
+                  <dd>
+                    el servidor procesa los datos recibidos y los pondrá a
+                    disposición de la aplicación web para que puedan ser
+                    visualizados en el dashboard.
+                  </dd>
+                </div>
+                <div>
+                  <dt>Comunicación con la tarjeta SD</dt>
+                  <dd>
+                    el datalogger almacenará localmente las mediciones en una
+                    tarjeta SD en formato xls permitiendo conservar los datos
+                    incluso si se pierde temporalmente la conexión con el
+                    servidor.
+                  </dd>
+                </div>
+              </dl>
+            </section>
+          </section>
+          <section id="doc-5" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 5</p>
+            <h2>Oferta de gestión</h2>
+            <section id="doc-5-1" class="report-subsection">
+              <h3><span>5.1</span> Gantt</h3>
+              <p>
+                El apartado está vacío en el texto de origen. El equipo
+                compartió por separado el siguiente diagrama de planificación:
+              </p>
+              <a
+                class="text-link"
+                href="https://docs.google.com/spreadsheets/d/1Xz1GQ1mTCwfHInZeYMvoxqCAlXODwI6CtSG6LOTz_Jo/edit?gid=1902926627#gid=1902926627"
+                target="_blank"
+                rel="noopener noreferrer"
+                >Consultar diagrama de Gantt
+                <span aria-hidden="true">↗</span></a
+              >
+            </section>
+            <section id="doc-5-2" class="report-subsection">
+              <h3><span>5.2</span> Infraestructura administrativa</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+          </section>
+          <section id="doc-6" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 6</p>
+            <h2>Oferta económica</h2>
+            <section id="doc-6-1" class="report-subsection">
+              <h3><span>6.1</span> Proveedores de Internet</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-6-2" class="report-subsection">
+              <h3><span>6.2</span> Proveedores de insumos electrónicos</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-6-3" class="report-subsection">
+              <h3><span>6.3</span> Proveedores de insumos varios</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+          </section>
+          <section id="doc-7" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 7</p>
+            <h2>Estimación económica</h2>
+            <p class="document-pending">
+              <span>PENDIENTE</span>Este apartado no tiene contenido en el
+              documento recibido.
+            </p>
+          </section>
+          <section id="doc-8" class="report-chapter">
+            <p class="eyebrow">SECCIÓN 8</p>
+            <h2>Contrato</h2>
+            <section id="doc-8-1" class="report-subsection">
+              <h3><span>8.1</span> Objetivo del proyecto</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-2" class="report-subsection">
+              <h3><span>8.2</span> Partes involucradas</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-3" class="report-subsection">
+              <h3><span>8.3</span> Alcance del proyecto</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-4" class="report-subsection">
+              <h3><span>8.4</span> Plazos</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-5" class="report-subsection">
+              <h3><span>8.5</span> Responsabilidades</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-6" class="report-subsection">
+              <h3><span>8.6</span> Criterios de aceptación</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-7" class="report-subsection">
+              <h3><span>8.7</span> Condiciones de modificación</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+            <section id="doc-8-8" class="report-subsection">
+              <h3><span>8.8</span> Firmas</h3>
+              <p class="document-pending">
+                <span>PENDIENTE</span>Este apartado no tiene contenido en el
+                documento recibido.
+              </p>
+            </section>
+          </section>
+        </article>
+      </div>
+      <nav class="page-bottom-nav container" aria-label="Continuar explorando">
+        <a class="text-link" href="documentacion.html"
+          >← Volver a Documentación</a
+        ><a
+          class="text-link"
+          href="assets/documents/documentacion-original.txt"
+          download
+          >Descargar texto original ↓</a
+        >
+      </nav>
+    </main>
+    <footer class="site-footer container">
+      <a class="brand" href="index.html#inicio"
+        ><span class="brand-mark"
+          ><svg><use href="#i-pulse" /></svg></span
+        >DataLogger<span class="brand-dot">.</span></a
+      >
+      <p>Proyecto Final DataLogger - 7.º año</p>
+      <a
+        href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+    <a class="back-to-top" href="#arriba" aria-label="Volver arriba" hidden
+      ><span aria-hidden="true">↑</span></a
+    >
+  </body>
+</html>

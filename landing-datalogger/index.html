@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Presentación del DataLogger ESP32: hardware, funciones y acceso a la interfaz, las guías y la documentación."
+    />
+    <meta name="theme-color" content="#164b91" />
+    <title>Del entorno al dato — DataLogger ESP32</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body id="arriba">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Iconos vectoriales locales: no requieren librerías ni conexiones externas. -->
+    <svg
+      class="svg-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-chip" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+          <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+          <rect x="9" y="9" width="6" height="6" rx="1" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-temp" viewBox="0 0 24 24">
+          <path d="M9 14.5V5a3 3 0 0 1 6 0v9.5a5 5 0 1 1-6 0Z" />
+          <path d="M12 8v9m6-11h3m-3 4h2" />
+          <circle cx="12" cy="18" r="1" />
+        </symbol>
+        <symbol id="i-drop" viewBox="0 0 24 24">
+          <path d="M12 3S5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12Z" />
+          <path d="M9 15a3 3 0 0 0 3 3" />
+        </symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24">
+          <path d="M4 19a10 10 0 1 1 16 0H4Z" />
+          <path d="m12 14 4-5M5 12h2m10 0h2M12 4v3" />
+          <circle cx="12" cy="14" r="1" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-sd" viewBox="0 0 24 24">
+          <path
+            d="M8 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7l4-4Z"
+          />
+          <path d="M9 3v5m4-5v5m4-5v5M8 16h8" />
+        </symbol>
+        <symbol id="i-screen" viewBox="0 0 24 24">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <path d="M8 21h8m-4-4v4M6 12l4-4 4 3 4-5" />
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 24 24">
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"
+          />
+          <path d="M14 2v6h6M8 13h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path
+            d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"
+          />
+        </symbol>
+        <symbol id="i-pulse" viewBox="0 0 24 24">
+          <path d="M2 12h5l3-8 4 16 3-8h5" />
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24">
+          <path
+            d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0"
+          />
+          <circle cx="12" cy="20" r=".5" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24">
+          <path d="m7 6-6 6 6 6m10-12 6 6-6 6M14 3l-4 18" />
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 24 24">
+          <path
+            d="M9 19c-4 1-4-2-6-2m12 5v-4a3.5 3.5 0 0 0-1-2.7c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.3 4 5.3 5.3 0 0 0 19.2 0S18 0 15 1.6a14 14 0 0 0-6 0C6 0 4.8 0 4.8 0A5.3 5.3 0 0 0 4.7 4 5.7 5.7 0 0 0 3.2 8c0 5.7 3.5 6.9 6.8 7.3A3.5 3.5 0 0 0 9 18v4"
+            transform="translate(1 2) scale(.9)"
+          />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 22v-3a8 8 0 0 1 16 0v3" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a class="brand" href="#inicio" aria-label="DataLogger, inicio"
+          ><span class="brand-mark"
+            ><svg><use href="#i-pulse" /></svg></span
+          >DataLogger<span class="brand-dot">.</span></a
+        >
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Abrir menú"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="main-nav" class="main-nav" aria-label="Navegación principal">
+          <a href="#inicio" aria-current="location">Inicio</a
+          ><a href="#proyecto">Proyecto</a><a href="#funciones">Funciones</a
+          ><a href="#arquitectura">Arquitectura</a
+          ><a href="#hardware">Hardware</a><a href="interfaz.html">Interfaz</a
+          ><a href="quick-start.html">Quick Start</a
+          ><a href="manual.html">Manual</a
+          ><a href="documentacion.html">Documentación</a
+          ><a href="faq.html">FAQ</a><a href="#equipo">Equipo</a
+          ><a
+            class="nav-github"
+            href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <section id="inicio" class="hero">
+        <div class="container hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">
+              <span class="status-dot"></span> PROYECTO FINAL · 7.º AÑO
+            </p>
+            <h1>
+              DataLogger<br />
+              <span class="title-model">ESP32</span
+              ><span class="title-period" aria-hidden="true">.</span>
+            </h1>
+            <p class="hero-subtitle">
+              Monitoreo ambiental, almacenamiento y visualización de datos en
+              tiempo real.
+            </p>
+            <p class="hero-description">
+              Sistema basado en ESP32 capaz de medir temperatura, humedad y
+              presión atmosférica, almacenar las mediciones y mostrarlas
+              mediante una interfaz web.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="#proyecto"
+                >Conocer el proyecto
+                <svg aria-hidden="true"><use href="#i-arrow" /></svg
+              ></a>
+            </div>
+            <div class="hero-notes">
+              <span
+                ><svg aria-hidden="true"><use href="#i-wifi" /></svg> Conexión
+                local</span
+              ><span
+                ><svg aria-hidden="true"><use href="#i-sd" /></svg> Registro en
+                microSD</span
+              ><span
+                ><svg aria-hidden="true"><use href="#i-code" /></svg> Código
+                abierto</span
+              >
+            </div>
+          </div>
+          <figure class="prototype product-visual">
+            <div class="visual-topline">
+              <span
+                ><span class="status-dot"></span> DATA LOGGER · MONITOREO
+                AMBIENTAL</span
+              ><span>01 / PRODUCTO</span>
+            </div>
+            <!-- Imagen de referencia proporcionada por el equipo. Para usar una fotografía real, reemplazar el archivo y actualizar el texto alternativo y el pie. -->
+            <img
+              class="datalogger-image"
+              src="assets/images/datalogger.png"
+              alt="Referencia visual del DataLogger: gabinete verde salvia con pantalla, pulsador y ranura lateral"
+              width="1448"
+              height="1086"
+              fetchpriority="high"
+            />
+            <figcaption>
+              <span class="product-caption-icon"
+                ><svg aria-hidden="true"><use href="#i-pulse" /></svg
+              ></span>
+              <div>
+                DataLogger ESP32<small
+                  >Diseñado para observar, registrar y comprender el
+                  entorno.</small
+                >
+              </div>
+              <span class="figure-tag">REFERENCIA VISUAL</span>
+            </figcaption>
+          </figure>
+        </div>
+        <div class="container metrics-strip">
+          <p>DEL ENTORNO<br /><strong>al dato.</strong></p>
+          <div>
+            <svg aria-hidden="true"><use href="#i-temp" /></svg
+            ><span>Temperatura<small>°C · BME280</small></span>
+          </div>
+          <div>
+            <svg aria-hidden="true"><use href="#i-drop" /></svg
+            ><span>Humedad<small>% · BME280</small></span>
+          </div>
+          <div>
+            <svg aria-hidden="true"><use href="#i-gauge" /></svg
+            ><span>Presión atmosférica<small>BME280</small></span>
+          </div>
+          <a href="#arquitectura"
+            >Un sistema conectado <span aria-hidden="true">↗</span></a
+          >
+        </div>
+      </section>
+      <section id="proyecto" class="section container">
+        <div class="project-editorial reveal">
+          <div>
+            <p class="eyebrow">01 / EL PROYECTO</p>
+            <h2>Una ventana al entorno.</h2>
+          </div>
+          <div>
+            <p>
+              DataLogger nace como un proyecto final que reúne electrónica,
+              programación y diseño. Su objetivo es convertir las condiciones
+              del ambiente en información que se pueda consultar y analizar.
+            </p>
+            <p>
+              El desarrollo conecta el dispositivo físico con una experiencia
+              web: desde la adquisición de una lectura hasta su interpretación
+              por el usuario.
+            </p>
+          </div>
+        </div>
+      </section>
+      <section id="funciones" class="section section-tinted">
+        <div class="container">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">02 / FUNCIONES</p>
+              <h2>De una lectura a una decisión.</h2>
+            </div>
+            <p>
+              Cuatro tareas que conectan las mediciones con su uso cotidiano.
+            </p>
+          </div>
+          <div class="capabilities-grid">
+            <article class="capability-card reveal">
+              <svg aria-hidden="true"><use href="#i-pulse" /></svg>
+              <h3>Observar</h3>
+              <p>Consultá las condiciones del ambiente y detectá cambios.</p>
+            </article>
+            <article class="capability-card reveal">
+              <svg aria-hidden="true"><use href="#i-screen" /></svg>
+              <h3>Analizar</h3>
+              <p>Compará períodos y encontrá patrones en las mediciones.</p>
+            </article>
+            <article class="capability-card reveal">
+              <svg aria-hidden="true"><use href="#i-sd" /></svg>
+              <h3>Conservar</h3>
+              <p>
+                Mantené un historial para volver sobre los datos cuando lo
+                necesites.
+              </p>
+            </article>
+            <article class="capability-card reveal">
+              <svg aria-hidden="true"><use href="#i-code" /></svg>
+              <h3>Configurar</h3>
+              <p>
+                Adaptá el registro y las alertas a las necesidades del proyecto.
+              </p>
+            </article>
+          </div>
+          <div class="section-footnote">
+            <span
+              >Las funciones y capturas de cada apartado están en el recorrido
+              de la interfaz.</span
+            ><a class="text-link" href="interfaz.html"
+              >Explorar las pantallas <span aria-hidden="true">→</span></a
+            >
+          </div>
+        </div>
+      </section>
+      <section id="arquitectura" class="section container">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">03 / ARQUITECTURA</p>
+            <h2>Cómo funciona.</h2>
+          </div>
+          <p>
+            Un recorrido claro, desde la captura de una medición hasta su
+            visualización.
+          </p>
+        </div>
+        <div class="architecture card reveal">
+          <div class="flow-branches">
+            <div class="branch rtc-branch">
+              <svg><use href="#i-clock" /></svg>
+              <div>
+                <strong>RTC DS3231</strong
+                ><small>Aporta fecha y hora al ESP32</small>
+              </div>
+              <span aria-hidden="true">↓</span>
+            </div>
+            <div class="branch oled-branch">
+              <svg><use href="#i-screen" /></svg>
+              <div>
+                <strong>OLED SSD1306</strong
+                ><small>Muestra información del ESP32</small>
+              </div>
+              <span aria-hidden="true">↑</span>
+            </div>
+          </div>
+          <ol
+            class="system-flow"
+            aria-label="Flujo de adquisición y consulta de datos"
+          >
+            <li>
+              <svg><use href="#i-pulse" /></svg><strong>BME280</strong
+              ><span>Medición</span>
+            </li>
+            <li class="flow-central">
+              <svg><use href="#i-chip" /></svg><strong>ESP32</strong
+              ><span>Control central</span>
+            </li>
+            <li>
+              <svg><use href="#i-code" /></svg><strong>Procesamiento</strong
+              ><span>Datos + tiempo</span>
+            </li>
+            <li>
+              <svg><use href="#i-sd" /></svg><strong>microSD</strong
+              ><span>Registro CSV</span>
+            </li>
+            <li>
+              <svg><use href="#i-code" /></svg><strong>API</strong
+              ><span>Servidor HTTP</span>
+            </li>
+            <li>
+              <svg><use href="#i-screen" /></svg><strong>Frontend</strong
+              ><span>Visualización</span>
+            </li>
+          </ol>
+          <p class="flow-note">
+            Cada medición conserva una marca temporal. La pantalla OLED permite
+            consultar información en el equipo, mientras que la API conecta los
+            registros con el navegador.
+          </p>
+        </div>
+      </section>
+      <section id="hardware" class="section section-tinted">
+        <div class="container">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">04 / HARDWARE</p>
+              <h2>Las piezas del DataLogger.</h2>
+            </div>
+            <p>
+              Medición, control y alimentación. Conocé los componentes que dan
+              forma al dispositivo.
+            </p>
+          </div>
+          <div class="components-grid">
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/esp32.png"
+                  alt="ESP32: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">01</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">CONTROL CENTRAL</span>
+                <h3>ESP32</h3>
+                <p>
+                  Coordina las lecturas, el registro en microSD y la conexión
+                  WiFi. Ejecuta el servidor web del dispositivo.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/bme280.png"
+                  alt="BME280: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">02</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">MEDICIÓN AMBIENTAL</span>
+                <h3>BME280</h3>
+                <p>
+                  Mide temperatura, humedad y presión atmosférica para conocer
+                  las condiciones del entorno.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/ds3231.png"
+                  alt="RTC DS3231: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">03</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">FECHA Y HORA</span>
+                <h3>RTC DS3231</h3>
+                <p>
+                  Aporta la referencia temporal que se asocia a cada medición
+                  registrada.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/oled.png"
+                  alt="Pantalla OLED SSD1306 del DataLogger"
+                  width="800"
+                  height="700"
+                  loading="lazy"
+                />
+                <span class="component-index">04</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">PANTALLA LOCAL</span>
+                <h3>OLED SSD1306</h3>
+                <p>
+                  Muestra información directamente en el DataLogger, sin abrir
+                  la interfaz web.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/microsd.png"
+                  alt="Módulo microSD: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">05</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">ALMACENAMIENTO</span>
+                <h3>Módulo microSD</h3>
+                <p>
+                  Permite guardar las mediciones en archivos CSV y alojar los
+                  archivos de la interfaz web.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/pulsador.png"
+                  alt="Pulsador: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">06</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">INTERACCIÓN FÍSICA</span>
+                <h3>Pulsador</h3>
+                <p>
+                  Permite interactuar con el dispositivo mediante una entrada
+                  física.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/bateria.png"
+                  alt="Batería: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">07</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">ALIMENTACIÓN PORTÁTIL</span>
+                <h3>Batería</h3>
+                <p>
+                  Forma parte del sistema de alimentación del equipo para su uso
+                  portátil.
+                </p>
+              </div>
+            </article>
+            <article class="component-card card reveal">
+              <div class="component-image">
+                <img
+                  src="assets/images/tp4056.png"
+                  alt="Módulo TP4056: componente del DataLogger"
+                  loading="lazy"
+                  width="600"
+                  height="450"
+                /><span class="component-index">08</span>
+              </div>
+              <div class="component-copy">
+                <span class="hardware-tag">GESTIÓN DE CARGA</span>
+                <h3>Módulo TP4056</h3>
+                <p>
+                  Integra la carga de la batería en el sistema de alimentación
+                  del proyecto.
+                </p>
+              </div>
+            </article>
+          </div>
+          <div class="section-footnote">
+            <span
+              >Un sistema integrado, desde el sensor hasta la
+              alimentación.</span
+            ><a class="text-link" href="documentacion.html#conexiones"
+              >Ver referencia de conexiones <span aria-hidden="true">↗</span></a
+            >
+          </div>
+        </div>
+      </section>
+      <section id="explorar" class="section container">
+        <div class="section-heading reveal">
+          <div>
+            <p class="eyebrow">05 / EXPLORÁ EL PROYECTO</p>
+            <h2>Elegí por dónde seguir.</h2>
+          </div>
+          <p>
+            Conocé la interfaz, poné en marcha el equipo o consultá el manual.
+            Cada recorrido tiene su propio espacio.
+          </p>
+        </div>
+        <div class="explore-grid">
+          <article class="explore-card card reveal">
+            <div class="card-top">
+              <span class="icon-box"
+                ><svg aria-hidden="true"><use href="#i-screen" /></svg></span
+              ><span class="card-number">01</span>
+            </div>
+            <h3>La interfaz, por dentro.</h3>
+            <p>
+              Recorré las siete pantallas y descubrí qué podés hacer en cada
+              una.
+            </p>
+            <a class="text-link" href="interfaz.html"
+              >Ver las pantallas <span aria-hidden="true">→</span></a
+            >
+          </article>
+          <article class="explore-card card reveal">
+            <div class="card-top">
+              <span class="icon-box"
+                ><svg aria-hidden="true"><use href="#i-pulse" /></svg></span
+              ><span class="card-number">02</span>
+            </div>
+            <h3>Tu primera lectura.</h3>
+            <p>
+              Una guía breve para conectar el DataLogger y empezar a usarlo.
+            </p>
+            <a class="text-link" href="quick-start.html"
+              >Abrir Quick Start <span aria-hidden="true">→</span></a
+            >
+          </article>
+          <article class="explore-card card reveal">
+            <div class="card-top">
+              <span class="icon-box"
+                ><svg aria-hidden="true"><use href="#i-file" /></svg></span
+              ><span class="card-number">03</span>
+            </div>
+            <h3>Todo lo que necesitás saber.</h3>
+            <p>
+              Uso, configuración y diagnóstico del sistema, organizados por
+              tema.
+            </p>
+            <a class="text-link" href="manual.html"
+              >Leer el manual <span aria-hidden="true">→</span></a
+            >
+          </article>
+        </div>
+      </section>
+      <section id="equipo" class="section section-tinted">
+        <div class="container">
+          <div class="section-heading reveal">
+            <div>
+              <p class="eyebrow">06 / EQUIPO</p>
+              <h2>Cinco personas. Un proyecto.</h2>
+            </div>
+            <p>
+              Las personas detrás del DataLogger y sus responsabilidades en el
+              desarrollo.
+            </p>
+          </div>
+          <div class="team-grid compact-team">
+            <article class="card team-card compact-member reveal">
+              <div class="member-identity">
+                <img
+                  class="member-photo"
+                  src="assets/images/valentino-dabbah.png"
+                  alt="Retrato de Valentino Dabbah"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <h3>Valentino Dabbah</h3>
+              </div>
+              <ul class="member-roles">
+                <li>Project Manager</li>
+                <li>Desarrollo frontend</li>
+                <li>Infraestructura de MCU</li>
+              </ul>
+            </article>
+            <article class="card team-card compact-member reveal">
+              <div class="member-identity">
+                <img
+                  class="member-photo"
+                  src="assets/images/santiago-puleo-retrato.png"
+                  alt="Retrato de Santiago Puleo"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <h3>Santiago Puleo</h3>
+              </div>
+              <ul class="member-roles">
+                <li>Desarrollo backend</li>
+                <li>Infraestructura de red</li>
+              </ul>
+            </article>
+            <article class="card team-card compact-member reveal">
+              <div class="member-identity">
+                <img
+                  class="member-photo"
+                  src="assets/images/felipe-risoli.png"
+                  alt="Retrato de Felipe Risoli"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <h3>Felipe Risoli</h3>
+              </div>
+              <ul class="member-roles">
+                <li>Desarrollo backend</li>
+                <li>Administración de BD</li>
+              </ul>
+            </article>
+            <article class="card team-card compact-member reveal">
+              <div class="member-identity">
+                <img
+                  class="member-photo"
+                  src="assets/images/marco-varilni.png"
+                  alt="Retrato de Marco Varilni"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <h3>Marco Varilni</h3>
+              </div>
+              <ul class="member-roles">
+                <li>Diseño UX/UI</li>
+                <li>Electrónica</li>
+                <li>Infraestructura de MCU</li>
+              </ul>
+            </article>
+            <article class="card team-card compact-member reveal">
+              <div class="member-identity">
+                <img
+                  class="member-photo"
+                  src="assets/images/malena-mazzarone.png"
+                  alt="Retrato de Malena Mazzarone"
+                  width="80"
+                  height="80"
+                  loading="lazy"
+                />
+                <h3>Malena Mazzarone</h3>
+              </div>
+              <ul class="member-roles">
+                <li>Multimedia</li>
+                <li>Diseño UX/UI</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section id="recursos" class="repository-section container">
+        <div class="repository-banner reveal">
+          <div>
+            <p class="eyebrow">DOCUMENTACIÓN DEL PROYECTO</p>
+            <h2>El trabajo detrás del dispositivo.</h2>
+            <p>
+              Consultá la documentación técnica, la planificación y el código
+              desde un mismo lugar.
+            </p>
+          </div>
+          <a class="button button-light" href="documentacion.html"
+            >Ver documentación <span aria-hidden="true">→</span></a
+          >
+        </div>
+      </section>
+    </main>
+    <footer class="site-footer container">
+      <a class="brand" href="#inicio"
+        ><span class="brand-mark"
+          ><svg><use href="#i-pulse" /></svg></span
+        >DataLogger<span class="brand-dot">.</span></a
+      >
+      <p>Proyecto Final DataLogger - 7.º año</p>
+      <a
+        href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+    <a class="back-to-top" href="#arriba" aria-label="Volver arriba" hidden
+      ><span aria-hidden="true">↑</span></a
+    >
+  </body>
+</html>

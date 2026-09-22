@@ -1,0 +1,298 @@
+Control de cambios
+
+Valentino Dabbah:     .
+Malena Mazzarone:     .
+Felipe Risoli:     .
+Santiago Puleo:     .
+Marco Varilni:     .
+Fecha
+Integrante
+Cambio realizado
+03/08/2026
+                                               .
+ comienzo de la documentación Word, se realizó el apartado 2.1
+07/08/2026
+                                               .
+Realización de los apartados 2.2, 2.3 y comienzo del 2.4
+ 10/082026
+                                               .
+Continuación del apartado 2.4, comienzo del del apartado 2.5, realización de los apartados 2.6, 3.1, 3.2, 3.3
+
+
+11/08/2026
+                                               .
+Realizado de apartados 3.4, 3.4.1, 3.4.2, 3.4.3, 3.4.4, 3.4.5, 3.4.6
+
+
+13/08/2026
+                                               .
+Realizado de apartados: 3.4.7, 3.4.8 y 3.4.9
+14/08/2026
+                                               .
+Realizado de apartados 3.5, 3.6
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2 Introduccion
+2.1 Proposito:
+Este proyecto nació de la necesidad del INTI (Instituto Nacional de Tecnología Industrial) por querer visualizar los datos obtenidos por sus robots al realizar pruebas de laboratorio de una manera sencilla y técnica, dichos datos  recolectados consisten en lo siguiente, el robot realiza una prueba de laboratorio, la que sea y dentro de la jaula donde se encuentra el robot se coloca un datalogger en un punto específico para que esté a través de sus sensores, mida datos como temperatura, humedad y presión, datos que luego enviará a un servidor dentro del laboratorio a través de una red mosquito con un protocolo de mensajería mqtt que envia un archivo .xlsx, este servidor transmitirá los datos a una web alojada en el mismo servidor la cual lee el archivo en formato .xlsx que envía el datalogger para así poner los datos del archivo en dashboard que el usuario final puede leer de manera más sencilla y comprensiva.
+2.2 Alcance:
+El alcance de este producto consiste en nuestros requerimientos funcionales y no funcionales, los cuales son:
+Requerimientos funcionales:
+Adquisición de datos: El sistema debe medir temperatura, humedad y presión en tiempo real a través de sensores.
+Transmisión de datos: El sistema debe enviar los datos de forma inalámbrica utilizando el protocolo MQTT. 
+Almacenamiento local: El sistema debe guardar los datos en una tarjeta SD en formato .xls para análisis posterior.
+Visualización de datos: El sistema debe mostrar los datos en una interfaz web en tiempo real con gráficas y valores numéricos.
+Configuración del sistema: El sistema debe permitir configurar parámetros como frecuencia de muestreo, umbrales de alarmas y credenciales MQTT.
+Alertas y notificaciones: El sistema debe generar alertas visuales en la interfaz web cuando los valores estén fuera de rango.
+Exportación de datos: El sistema debe permitir descargar los datos almacenados en la tarjeta SD desde la interfaz web.
+Autonomía del sistema: El sistema debe poder operar de forma autónoma alimentado por batería.
+Requerimientos no funcionales:
+Confiabilidad: El sistema debe funcionar de manera continua y estable, sin pérdida de datos.
+Rendimiento: El sistema debe transmitir y mostrar los datos en tiempo real con una latencia menor a 2 segundos.
+Eficiencia energética: El sistema debe maximizar la duración de la batería optimizando el consumo de energía.
+Seguridad: El sistema debe autenticar el acceso a la interfaz web mediante usuario y contraseña.
+Integridad de datos: El sistema debe garantizar que los datos almacenados y transmitidos no se corrompan ni se pierdan.
+Mantenibilidad: El sistema debe ser fácil de actualizar y mantener tanto en hardware como en software.
+Usabilidad: La interfaz web debe ser intuitiva, clara y adaptable a diferentes dispositivos.
+Resistencia ambiental: El hardware debe resistir condiciones de laboratorio, variaciones de temperatura y humedad.
+2.3 Personal Involucrado:
+RESPONSABLES
+ID
+CARGO ASIGNADO
+Dabbah Valentino
+PM
+Project Manager
+D03
+Desarrollador 03 - Front End
+IM
+Encargado de Infra. de MCU
+Puleo Santiago
+D01
+Desarrollador 01 - Back End
+IR
+Encargado de Infra. de Red
+Risoli Felipe
+D02
+Desarrollador 02 - Back End
+BD
+Administrador de BD
+Varilni Marco
+DUX02
+Diseñador 02 UX/UI
+ELE
+Encargado de -Electrónica-
+IM
+Encargado de Infra. de MCU
+Malena Mazzarone
+MUL
+Encargado de -Multimedios
+DuX01
+Diseñador 01 UX/UI
+
+
+2.4 Glosario:
+INTI: Instituto Nacional de Tecnologia Industrial
+LABI: Laboratorio de robotica del INTI
+mA: Miliamperios
+
+2.5 Referencias:
+
+2.6 Resumen ejecutivo:
+Nuestro objetivo en este proyecto es realizar un datalogger autónomo (Funciona con una batería) el cual se comunique con el servidor del laboratorio para que de esa forma pueda hostearse en el mismo una página web en la cual cualquier integrante del equipo del laboratorio puede revisar el estado de lo que se esté midiendo en ese momento por el datalogger.
+Segunda seccion:
+3 Descripción general:
+3.1
+En el contexto del laboratorio de robótica del inti, nuestro producto se inserta como una parte de un sistema mayor, porque si bien ahora el LABI del INTI contará con un solo datalogger al finalizar el proyecto, al pasar los meses, podría adquirir nuevos equipos los cuales podrán conectarse también al servidor del LABI y asi, tambien podran ser monitoreados de manera remota por el equipo del LABI.
+3.2 Funcionalidad del producto:
+La funcionalidad principal del producto es que el equipo del LABI pueda monitorear de forma remota las mediciones obtenidas por el datalogger, ¿mediciones de que? De las pruebas y ensayos realizados con los robots y el material del LABI.
+3.3 Características de los usuarios:
+
+Tipo de usuario
+Director del laboratorio de robótica del Instituto Nacional de Tecnología Industrial
+Formacion
+Técnico en electrónica, Técnico superior en automatización y robótica, Profesor en disciplinas industriales especializado en automatización y robótica, Especialista en calidad industrial.
+Actividades
+Realización de pruebas y ensayos con los robots del laboratorio, creacion y direccion de prácticas universitarias, armado de rúbricas y guías de robótica
+
+
+3.4 Restricciones:
+3.4.1 Politicas Reguladoras:
+La web del producto será de software libre para el equipo del laboratorio, este 
+3.4.2 Limitaciones de hardware:
+Los requisitos mínimos del producto son un datalogger, una batería de 1000mA, un microprocesador, un CI que sense algún tipo de dato ( en nuestro caso temperatura, humedad y presión) una red que comunique el datalogger con un servidor y una base de datos en nuestro caso PONER LA QUE USE FELIPE.
+3.4.3 Interfaces con otras aplicaciones:
+NO HAY POR EL MOMENTO 
+3.4.4 Función de control:
+La web del producto, cuenta con un solo tipo de autenticación la cual es registrarse en la web con un usuario y contraseña dados por el  director del LABI.
+3.4.5 Requisitos del lenguaje:
+El lenguaje requerido para entender la web del LABI es natural y tecnico, la parte natural es por la interfaz de la web esta en español (el idioma no es modificable desde la configuracion de la web) y la forma de visualizar el tiempo a través de los calendarios es con el calendario gregoriano, la parte técnica es por la forma de expresar las medidas de los datos recolectados por el datalogger y por la forma de cambiar los colores de las funciones de los gráficos en el panel principal, ya que si bien la interfaz que se muestra para cambiarlos es instintiva para los usuarios, la forma en la que se expresa el código del color elegido en formato RGB es lenguaje técnico
+3.4.6 Protocolos señalados:
+Los estándares  de comunicación utilizados son:
+Para la red: MQTT, ya que consideramos que es la forma óptima y que utiliza y necesita menos recursos y densidad de datos, IP por la dirección del servidor en donde se aloja la web.
+Para la web: HTTPS ya que esta añade una capa de cifrado a la web, ICMP para enviar mensajes de error con la conexión del datalogger con la web. (a chequear con puleo y feli si se puede realizar y si se realizó)
+3.4.7 Requisitos de fiabilidad:
+REQUIERE DE PRUEBAS CON EL DATALOGGER
+3.4.8 Credibilidad de la aplicación:
+HACER ENTRVISTA CON EL USUARIO
+3.4.9 Consideraciones de seguridad:
+—-----
+3.5 Suposiciones y dependencias:
+Ya que nuestro proyecto es para una empresa estatal, con el gobierno actual que no apoya mucho a lo estatal, lo cual está generando deficiencias en los presupuestos del INTI y la cantidad de sus empleados, lo que podría perjudicar principalmente al proyecto, es que el presidente del INTI decida cerrar el área de robótica, por ende el LABI desaparecería, otra cosa similar que puede pasar, es que el INTI al estar pasando por una etapa de bajo presupuesto, no pueda pagar el proyecto como se debe.
+3.6 Evolución previsible del sistema:
+Fecha: 14/08/2026
+Integrante: Valentino Dabbah
+Evolución o mejora prevista: De la fecha actual a un mes nos proponemos, tener el Datalogger funcionando, con la web siendo capaz de reconocerlo, además de que si este por algun tipo de intervención ambiental o funcional se desconecta del sistema, mandará una notificación al celular o dispositivos de los trabajadores, tengan o no la pagina abierta.
+
+Tercera seccion:
+4 Requisitos específicos
+4.1 Requerimientos funcionales: NI YO, NI LOU TENEMOS LA MAS MINIMA IDEA ENTRE LA DIFERENCIA ENTRE ESTO Y EL ALCANCE DEL PUNTO 2.2
+4.2 
+Numero de requisito
+1.
+Requisito
+El sistema debe ser indiferente del usuario
+Descripcion
+Sin importar que usuario entre el sistema no deberá cambiar su interfaz.
+Prioridad del requisito
+
+
+
+
+Numero de requisito
+2.
+Requisito
+Usabilidad
+Descripcion
+El sistema deberá adaptar su interfaz al tamaño del dispositivo
+Prioridad del requisito
+Media
+
+
+Numero de requisito
+3.
+Requisito
+Visualizacion de datos
+Descripcion
+La interfaz del sistema debe mostrar los datos enviados por el datalogger con graficas y valores numericos
+Prioridad del requisito
+Alta
+
+
+Numero de requisito
+4.
+Requisito
+Converciones
+Descripcion
+La interfaz del sistema debe permitir al usuario visualizar los valores numéricos en distintas unidades de medida (Ej: Celsius,fahrenheit)
+Prioridad del requisito
+ 
+
+
+
+
+
+
+Numero de requisito
+5.
+Requisito
+
+
+Descripcion
+
+
+Prioridad del requisito
+
+
+
+
+Numero de requisito
+6.
+Requisito
+
+
+Descripcion
+
+
+Prioridad del requisito
+
+
+
+
+4.3 
+
+4.4 Interfaces de software:
+Pantalla de inicio de sesión:  a través de un usuario y contraseña el administrador podrá ingresar a los datos proporcionados en la página web
+Menú principal:  en el menú inicial se encuentran las distintas secciones de datos disponibles 
+Botones: ejecutan acciones determinadas
+Formularios: a partir de ellos se permiten ingresar información
+Mensajes de alerta: aparecen en el momento de informar errores o confirman acciones.
+Pantallas de configuración: en esta sección se permiten modificar las preferencias del usuario.
+
+4.5 Interfaces de comunicación:
+Comunicación entre sensores y datalogger: los sensores transmitirán las mediciones de temperatura, humedad y presión al datalogger mediante las interfaces de comunicación correspondientes.
+Comunicación inalámbrica: el datalogger enviará los datos al servidor de manera inalámbrica, evitando la necesidad de una conexión física.
+Protocolo MQTT: se utilizará MQTT como protocolo de mensajería para transmitir los datos desde el datalogger hacia el servidor. Este protocolo permite una comunicación eficiente y de bajo consumo.
+Comunicación entre servidor e interfaz web: el servidor procesa los datos recibidos y los pondrá a disposición de la aplicación web para que puedan ser visualizados en el dashboard.
+Comunicación con la tarjeta SD: el datalogger almacenará localmente las mediciones en una tarjeta SD en formato xls  permitiendo conservar los datos incluso si se pierde temporalmente la conexión con el servidor.
+5 Oferta de gestion
+5.1 GANTT:
+
+5.2 Infraestructura administrativa:
+
+6 Oferta economica
+6.1 Proveedores de internet:
+
+6.2 Proveedores de insumos electrónicos
+
+6.3 Proveedores de insumos varios:
+
+7 Estimación Económica
+
+8 Contrato
+8.1 Objetivo del proyecto:
+
+8.2 Partes involucradas:
+
+8.3 Alcance del proyecto:
+
+8.4 Plazos:
+
+8.5 Responsabilidades:
+
+8.6 Criterios de aceptación:
+
+8.7 Condiciones de modificación:
+
+8.8 Firmas:

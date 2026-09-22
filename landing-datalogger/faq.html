@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Respuestas sobre la conexión, la API, los módulos y el almacenamiento del DataLogger."
+    />
+    <meta name="theme-color" content="#164b91" />
+    <title>Preguntas frecuentes — DataLogger ESP32</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body id="arriba" class="detail-page">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Iconos vectoriales locales: no requieren librerías ni conexiones externas. -->
+    <svg
+      class="svg-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-chip" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+          <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+          <rect x="9" y="9" width="6" height="6" rx="1" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-temp" viewBox="0 0 24 24">
+          <path d="M9 14.5V5a3 3 0 0 1 6 0v9.5a5 5 0 1 1-6 0Z" />
+          <path d="M12 8v9m6-11h3m-3 4h2" />
+          <circle cx="12" cy="18" r="1" />
+        </symbol>
+        <symbol id="i-drop" viewBox="0 0 24 24">
+          <path d="M12 3S5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12Z" />
+          <path d="M9 15a3 3 0 0 0 3 3" />
+        </symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24">
+          <path d="M4 19a10 10 0 1 1 16 0H4Z" />
+          <path d="m12 14 4-5M5 12h2m10 0h2M12 4v3" />
+          <circle cx="12" cy="14" r="1" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-sd" viewBox="0 0 24 24">
+          <path
+            d="M8 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7l4-4Z"
+          />
+          <path d="M9 3v5m4-5v5m4-5v5M8 16h8" />
+        </symbol>
+        <symbol id="i-screen" viewBox="0 0 24 24">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <path d="M8 21h8m-4-4v4M6 12l4-4 4 3 4-5" />
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 24 24">
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"
+          />
+          <path d="M14 2v6h6M8 13h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path
+            d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"
+          />
+        </symbol>
+        <symbol id="i-pulse" viewBox="0 0 24 24">
+          <path d="M2 12h5l3-8 4 16 3-8h5" />
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24">
+          <path
+            d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0"
+          />
+          <circle cx="12" cy="20" r=".5" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24">
+          <path d="m7 6-6 6 6 6m10-12 6 6-6 6M14 3l-4 18" />
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 24 24">
+          <path
+            d="M9 19c-4 1-4-2-6-2m12 5v-4a3.5 3.5 0 0 0-1-2.7c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.3 4 5.3 5.3 0 0 0 19.2 0S18 0 15 1.6a14 14 0 0 0-6 0C6 0 4.8 0 4.8 0A5.3 5.3 0 0 0 4.7 4 5.7 5.7 0 0 0 3.2 8c0 5.7 3.5 6.9 6.8 7.3A3.5 3.5 0 0 0 9 18v4"
+            transform="translate(1 2) scale(.9)"
+          />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 22v-3a8 8 0 0 1 16 0v3" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a
+          class="brand"
+          href="index.html#inicio"
+          aria-label="DataLogger, inicio"
+          ><span class="brand-mark"
+            ><svg><use href="#i-pulse" /></svg></span
+          >DataLogger<span class="brand-dot">.</span></a
+        >
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Abrir menú"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="main-nav" class="main-nav" aria-label="Navegación principal">
+          <a href="index.html#inicio">Inicio</a
+          ><a href="index.html#proyecto">Proyecto</a
+          ><a href="index.html#funciones">Funciones</a
+          ><a href="index.html#arquitectura">Arquitectura</a
+          ><a href="index.html#hardware">Hardware</a
+          ><a href="interfaz.html">Interfaz</a
+          ><a href="quick-start.html">Quick Start</a
+          ><a href="manual.html">Manual</a
+          ><a href="documentacion.html">Documentación</a
+          ><a href="faq.html" aria-current="page">FAQ</a
+          ><a href="index.html#equipo">Equipo</a
+          ><a
+            class="nav-github"
+            href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <header class="page-intro">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Ubicación">
+            <a href="index.html">Inicio</a><span aria-hidden="true">/</span
+            ><span>FAQ</span>
+          </nav>
+          <p class="eyebrow">DATALOGGER / FAQ</p>
+          <h1>Respuestas para seguir.</h1>
+          <p class="page-lead">
+            Conexión, sensores, almacenamiento y uso cotidiano. Abrí una
+            pregunta para consultar su respuesta.
+          </p>
+        </div>
+      </header>
+      <section
+        class="section container faq-page"
+        aria-label="Preguntas frecuentes"
+      >
+        <div class="faq-list">
+          <details>
+            <summary>¿Necesito Internet para usar el DataLogger?</summary>
+            <p>
+              No para el uso local. Conectate a la red propia del ESP32 y abrí
+              la dirección del dispositivo. La interfaz publicada y los
+              servicios externos sí requieren acceso a sus respectivas redes.
+            </p>
+          </details>
+          <details>
+            <summary>¿Puedo usar el hotspot de mi celular?</summary>
+            <p>
+              Sí. Activá un hotspot de 2.4 GHz y conectá el ESP32 y la
+              computadora a esa red. El hotspot debe permitir la comunicación
+              entre los dispositivos conectados.
+            </p>
+          </details>
+          <details>
+            <summary>¿Por qué cambia la IP?</summary>
+            <p>
+              El router o el hotspot suele asignar la IP automáticamente
+              mediante DHCP. Al reconectar el ESP32 puede entregarle una
+              dirección diferente.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo puedo conocer la IP del ESP32?</summary>
+            <p>
+              Abrí el Monitor Serie a 115200 baudios y buscá la dirección
+              mostrada después de la conexión WiFi. Usá esa IP en el navegador
+              desde un equipo de la misma red.
+            </p>
+          </details>
+          <details>
+            <summary>¿Cómo compruebo si el ESP32 está conectado?</summary>
+            <p>
+              Revisá los mensajes del Monitor Serie y abrí
+              <code>http://IP_DEL_ESP32/api/actual</code> con la IP del equipo.
+              Si recibís las mediciones, la conexión y el servidor HTTP están
+              respondiendo.
+            </p>
+          </details>
+          <details>
+            <summary>¿Qué significa bme280=true?</summary>
+            <p>
+              Indica que el firmware detectó el sensor ambiental BME280 y lo
+              informa como disponible. Si aparece <code>false</code>, revisá el
+              sensor, la alimentación y sus conexiones.
+            </p>
+          </details>
+          <details>
+            <summary>¿Qué significa rtc=true?</summary>
+            <p>
+              Indica que el reloj RTC DS3231 fue inicializado y está disponible.
+              Si la fecha u hora son incorrectas, revisá también la
+              configuración del reloj.
+            </p>
+          </details>
+          <details>
+            <summary>¿Qué significa sd=true?</summary>
+            <p>
+              Indica que la microSD está disponible para el sistema. Si aparece
+              <code>false</code>, comprobá la tarjeta, el módulo lector y sus
+              conexiones.
+            </p>
+          </details>
+          <details>
+            <summary>¿Dónde se guardan las mediciones?</summary>
+            <p>
+              Las mediciones se guardan localmente como archivos CSV en la
+              carpeta <code>/data/</code> de la microSD. Podés consultarlas
+              desde el historial o descargarlas mediante la exportación.
+            </p>
+          </details>
+          <details>
+            <summary>¿Qué pasa si reinicio el ESP32?</summary>
+            <p>
+              El firmware vuelve a inicializar los módulos y retoma el registro.
+              Los archivos ya guardados en la microSD permanecen; las mediciones
+              se interrumpen mientras el dispositivo está apagado o
+              reiniciándose.
+            </p>
+          </details>
+          <details>
+            <summary>¿La interfaz muestra datos reales?</summary>
+            <p>
+              La interfaz del dispositivo consulta las mediciones del ESP32. La
+              galería de esta web muestra capturas proporcionadas por el equipo:
+              sus valores son los registrados en esas imágenes y no se
+              actualizan en vivo.
+            </p>
+          </details>
+          <details>
+            <summary>
+              ¿Por qué /api/actual funciona pero la página principal no?
+            </summary>
+            <p>
+              Si la API responde, revisá los archivos del frontend en la
+              microSD. Debe existir <code>/www/index.html</code>, junto con sus
+              archivos de estilos y JavaScript.
+            </p>
+          </details>
+          <details>
+            <summary>¿Debo subir las credenciales WiFi a GitHub?</summary>
+            <p>
+              No. Configurá las credenciales únicamente en tu entorno local. El
+              repositorio público debe usar marcadores de ejemplo y nunca
+              contraseñas, tokens ni información privada.
+            </p>
+          </details>
+        </div>
+      </section>
+      <nav class="page-bottom-nav container" aria-label="Continuar explorando">
+        <a class="text-link" href="quick-start.html"
+          >Ver Quick Start <span aria-hidden="true">→</span></a
+        ><a class="text-link" href="manual.html"
+          >Consultar el manual <span aria-hidden="true">→</span></a
+        >
+      </nav>
+    </main>
+    <footer class="site-footer container">
+      <a class="brand" href="index.html#inicio"
+        ><span class="brand-mark"
+          ><svg><use href="#i-pulse" /></svg></span
+        >DataLogger<span class="brand-dot">.</span></a
+      >
+      <p>Proyecto Final DataLogger - 7.º año</p>
+      <a
+        href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+    <a class="back-to-top" href="#arriba" aria-label="Volver arriba" hidden
+      ><span aria-hidden="true">↑</span></a
+    >
+  </body>
+</html>

@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="description"
+      content="Manual del DataLogger: conexión, mediciones, historial, muestreo, alertas, preferencias y diagnóstico."
+    />
+    <meta name="theme-color" content="#164b91" />
+    <title>Manual de usuario — DataLogger ESP32</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body id="arriba" class="detail-page">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <!-- Iconos vectoriales locales: no requieren librerías ni conexiones externas. -->
+    <svg
+      class="svg-library"
+      xmlns="http://www.w3.org/2000/svg"
+      aria-hidden="true"
+    >
+      <defs>
+        <symbol id="i-chip" viewBox="0 0 24 24">
+          <rect x="6" y="6" width="12" height="12" rx="2" />
+          <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+          <rect x="9" y="9" width="6" height="6" rx="1" />
+        </symbol>
+        <symbol id="i-arrow" viewBox="0 0 24 24">
+          <path d="M4 12h16m-6-6 6 6-6 6" />
+        </symbol>
+        <symbol id="i-temp" viewBox="0 0 24 24">
+          <path d="M9 14.5V5a3 3 0 0 1 6 0v9.5a5 5 0 1 1-6 0Z" />
+          <path d="M12 8v9m6-11h3m-3 4h2" />
+          <circle cx="12" cy="18" r="1" />
+        </symbol>
+        <symbol id="i-drop" viewBox="0 0 24 24">
+          <path d="M12 3S5 11 5 15a7 7 0 0 0 14 0c0-4-7-12-7-12Z" />
+          <path d="M9 15a3 3 0 0 0 3 3" />
+        </symbol>
+        <symbol id="i-gauge" viewBox="0 0 24 24">
+          <path d="M4 19a10 10 0 1 1 16 0H4Z" />
+          <path d="m12 14 4-5M5 12h2m10 0h2M12 4v3" />
+          <circle cx="12" cy="14" r="1" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="9" />
+          <path d="M12 6v6l4 2" />
+        </symbol>
+        <symbol id="i-sd" viewBox="0 0 24 24">
+          <path
+            d="M8 3h10a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V7l4-4Z"
+          />
+          <path d="M9 3v5m4-5v5m4-5v5M8 16h8" />
+        </symbol>
+        <symbol id="i-screen" viewBox="0 0 24 24">
+          <rect x="2" y="3" width="20" height="14" rx="2" />
+          <path d="M8 21h8m-4-4v4M6 12l4-4 4 3 4-5" />
+        </symbol>
+        <symbol id="i-file" viewBox="0 0 24 24">
+          <path
+            d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6Z"
+          />
+          <path d="M14 2v6h6M8 13h8m-8 4h6" />
+        </symbol>
+        <symbol id="i-download" viewBox="0 0 24 24">
+          <path
+            d="M12 3v12m-5-5 5 5 5-5M4 16v4a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-4"
+          />
+        </symbol>
+        <symbol id="i-pulse" viewBox="0 0 24 24">
+          <path d="M2 12h5l3-8 4 16 3-8h5" />
+        </symbol>
+        <symbol id="i-wifi" viewBox="0 0 24 24">
+          <path
+            d="M2 8a16 16 0 0 1 20 0M5 12a11 11 0 0 1 14 0m-11 4a6 6 0 0 1 8 0"
+          />
+          <circle cx="12" cy="20" r=".5" />
+        </symbol>
+        <symbol id="i-code" viewBox="0 0 24 24">
+          <path d="m7 6-6 6 6 6m10-12 6 6-6 6M14 3l-4 18" />
+        </symbol>
+        <symbol id="i-github" viewBox="0 0 24 24">
+          <path
+            d="M9 19c-4 1-4-2-6-2m12 5v-4a3.5 3.5 0 0 0-1-2.7c3.3-.4 6.8-1.6 6.8-7.3A5.7 5.7 0 0 0 19.3 4 5.3 5.3 0 0 0 19.2 0S18 0 15 1.6a14 14 0 0 0-6 0C6 0 4.8 0 4.8 0A5.3 5.3 0 0 0 4.7 4 5.7 5.7 0 0 0 3.2 8c0 5.7 3.5 6.9 6.8 7.3A3.5 3.5 0 0 0 9 18v4"
+            transform="translate(1 2) scale(.9)"
+          />
+        </symbol>
+        <symbol id="i-user" viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="4" />
+          <path d="M4 22v-3a8 8 0 0 1 16 0v3" />
+        </symbol>
+      </defs>
+    </svg>
+
+    <header class="site-header">
+      <div class="container nav-wrap">
+        <a
+          class="brand"
+          href="index.html#inicio"
+          aria-label="DataLogger, inicio"
+          ><span class="brand-mark"
+            ><svg><use href="#i-pulse" /></svg></span
+          >DataLogger<span class="brand-dot">.</span></a
+        >
+        <button
+          class="menu-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="main-nav"
+          aria-label="Abrir menú"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <nav id="main-nav" class="main-nav" aria-label="Navegación principal">
+          <a href="index.html#inicio">Inicio</a
+          ><a href="index.html#proyecto">Proyecto</a
+          ><a href="index.html#funciones">Funciones</a
+          ><a href="index.html#arquitectura">Arquitectura</a
+          ><a href="index.html#hardware">Hardware</a
+          ><a href="interfaz.html">Interfaz</a
+          ><a href="quick-start.html">Quick Start</a
+          ><a href="manual.html" aria-current="page">Manual</a
+          ><a href="documentacion.html">Documentación</a
+          ><a href="faq.html">FAQ</a><a href="index.html#equipo">Equipo</a
+          ><a
+            class="nav-github"
+            href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+            target="_blank"
+            rel="noopener noreferrer"
+            >GitHub <span aria-hidden="true">↗</span></a
+          >
+        </nav>
+      </div>
+    </header>
+
+    <main id="contenido">
+      <header class="page-intro">
+        <div class="container">
+          <nav class="breadcrumbs" aria-label="Ubicación">
+            <a href="index.html">Inicio</a><span aria-hidden="true">/</span
+            ><span>Manual de usuario</span>
+          </nav>
+          <p class="eyebrow">DATALOGGER / MANUAL DE USUARIO</p>
+          <h1>El equipo, en tus manos.</h1>
+          <p class="page-lead">
+            Una guía para consultar datos, configurar el registro y resolver los
+            problemas más habituales del DataLogger.
+          </p>
+        </div>
+      </header>
+      <section class="section container" aria-label="Manual de consulta">
+        <article id="manual" class="manual-block standalone-manual">
+          <div class="docs-title">
+            <span class="icon-box"
+              ><svg><use href="#i-file" /></svg
+            ></span>
+            <div>
+              <p class="eyebrow">GUÍA DE CONSULTA</p>
+              <h2>Uso y diagnóstico del equipo.</h2>
+            </div>
+          </div>
+          <div class="manual-grid">
+            <section class="manual-topic">
+              <span>01 / PRIMER USO</span>
+              <h3>Puesta en marcha</h3>
+              <p>
+                Si es la primera vez que utilizás el equipo, seguí la guía de
+                conexión. Para los siguientes encendidos, prepará la microSD,
+                conectá la alimentación y comprobá que el dispositivo inicie
+                correctamente.
+              </p>
+              <a class="text-link" href="quick-start.html"
+                >Consultar Quick Start <span aria-hidden="true">→</span></a
+              >
+            </section>
+            <section class="manual-topic">
+              <span>02 / CONEXIÓN</span>
+              <h3>Volver a entrar al panel</h3>
+              <p>
+                Conectá tu equipo a la red del ESP32 o a la misma red local
+                configurada en el firmware. Abrí
+                <code>http://IP_DEL_ESP32/</code> con la dirección actual del
+                dispositivo.
+              </p>
+              <p>
+                Si la dirección anterior no responde, revisá la IP en el Monitor
+                Serie a <code>115200</code> baudios. Puede cambiar al
+                reconectarse a un router o hotspot.
+              </p>
+            </section>
+            <section class="manual-topic">
+              <span>03 / CONSULTAS</span>
+              <h3>Filtrar y exportar registros</h3>
+              <p>
+                Abrí Historial, elegí las fechas, la variable y el intervalo, y
+                aplicá el filtro. Revisá el período seleccionado antes de
+                exportar los registros en CSV.
+              </p>
+              <a class="text-link" href="interfaz.html#vista-historial"
+                >Ver la pantalla de Historial
+                <span aria-hidden="true">→</span></a
+              >
+            </section>
+            <section class="manual-topic">
+              <span>04 / CONFIGURACIÓN</span>
+              <h3>Cambiar el registro y las alertas</h3>
+              <p>
+                En Configuración, seleccioná el intervalo de muestreo y la
+                retención. Ajustá las unidades, definí los límites de alerta y
+                guardá los cambios.
+              </p>
+              <p>
+                El selector de tema permite elegir el modo oscuro; las
+                preferencias de visualización se conservan para los próximos
+                accesos.
+              </p>
+              <a class="text-link" href="interfaz.html#vista-configuracion"
+                >Ver la pantalla de Configuración
+                <span aria-hidden="true">→</span></a
+              >
+            </section>
+            <section class="manual-topic">
+              <span>05 / ALMACENAMIENTO</span>
+              <h3>microSD y actualización del frontend</h3>
+              <p>
+                La tarjeta conserva los CSV en <code>/data/</code> y la interfaz
+                en <code>/www/</code>. Apagá el equipo antes de retirarla.
+              </p>
+              <p>
+                Si el firmware tiene habilitada la administración, usá
+                <code>http://IP_DEL_ESP32/admin</code> para cargar los archivos
+                del frontend sin extraer la tarjeta.
+              </p>
+            </section>
+            <section class="manual-topic">
+              <span>06 / ESTADO</span>
+              <h3>Comprobar los módulos</h3>
+              <p>
+                Revisá el estado del BME280, RTC, SD y WiFi antes de interpretar
+                una lectura o investigar un problema. Un módulo no disponible
+                requiere revisar sus conexiones y alimentación.
+              </p>
+              <a class="text-link" href="documentacion.html#api"
+                >Consultar la referencia de la API
+                <span aria-hidden="true">→</span></a
+              >
+            </section>
+            <section class="manual-topic">
+              <span>07 / DIAGNÓSTICO</span>
+              <h3>Comprobar la conexión</h3>
+              <p>
+                Confirmá la red y la dirección actual. Desde una terminal de
+                Windows, podés comprobar la comunicación y el servidor:
+              </p>
+              <pre><code>ping IP_DEL_ESP32
+Test-NetConnection IP_DEL_ESP32 -Port 80</code></pre>
+              <p>
+                Luego comprobá la respuesta de la API para distinguir un
+                problema de red de uno del frontend.
+              </p>
+            </section>
+            <section class="manual-topic">
+              <span>08 / SOLUCIONES</span>
+              <h3>Resolver problemas habituales</h3>
+              <p>
+                <strong>Sin lecturas:</strong> revisá el sensor y sus
+                conexiones. <strong>Hora incorrecta:</strong> comprobá el RTC.
+                <strong>Sin registros:</strong> revisá la microSD.
+              </p>
+              <p>
+                <strong>La API responde pero el panel no abre:</strong> verificá
+                que <code>/www/index.html</code> y los recursos del frontend
+                estén presentes en la tarjeta.
+              </p>
+              <a class="text-link" href="faq.html"
+                >Consultar preguntas frecuentes
+                <span aria-hidden="true">→</span></a
+              >
+            </section>
+          </div>
+        </article>
+      </section>
+      <nav class="page-bottom-nav container" aria-label="Continuar explorando">
+        <a class="text-link" href="quick-start.html"
+          >Ir a Quick Start <span aria-hidden="true">→</span></a
+        ><a class="text-link" href="documentacion.html"
+          >Ver documentación técnica <span aria-hidden="true">→</span></a
+        >
+      </nav>
+    </main>
+    <footer class="site-footer container">
+      <a class="brand" href="index.html#inicio"
+        ><span class="brand-mark"
+          ><svg><use href="#i-pulse" /></svg></span
+        >DataLogger<span class="brand-dot">.</span></a
+      >
+      <p>Proyecto Final DataLogger - 7.º año</p>
+      <a
+        href="https://github.com/proyectofinal7ano-spec/G2-Datalogger-7mo-IB"
+        target="_blank"
+        rel="noopener noreferrer"
+        >GitHub <span aria-hidden="true">↗</span></a
+      >
+    </footer>
+    <a class="back-to-top" href="#arriba" aria-label="Volver arriba" hidden
+      ><span aria-hidden="true">↑</span></a
+    >
+  </body>
+</html>
