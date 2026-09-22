@@ -49,7 +49,7 @@ Las capturas se muestran completas y se pueden abrir en tamaño original. Son im
 
 ## Publicación y alcance
 
-Subí **todo el contenido de `landing-datalogger/`** a la raíz del repositorio usado para GitHub Pages. Mantené las rutas relativas; cada HTML puede abrirse directamente o compartirse como página independiente.
+El sitio está en la raíz del proyecto: `index.html`, las otras páginas, `styles.css`, `script.js` y `assets/`. Para GitHub Pages, publicá desde la raíz del repositorio. Mantené las rutas relativas; cada HTML puede abrirse directamente o compartirse como página independiente.
 
 El sitio presenta y documenta el proyecto; no modifica el firmware ni ejecuta las funciones del panel. Las funciones de muestreo, retención, alertas y preferencias se describen según la información del equipo.
 
