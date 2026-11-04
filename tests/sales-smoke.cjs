@@ -85,6 +85,17 @@ let browser;
         assert.equal(await page.$eval(".site-header .brand", el => el.textContent.trim()), "Datalogger");
         assert.equal(await page.$$eval("#main-nav > a", links => links.map(a => a.textContent).join(",")), "Producto,Beneficios,Paneles,Equipo,Quick Start");
         assert.equal(await page.$eval('#main-nav a[href="quick-start.html"]', link => link.textContent.trim()), "Quick Start", "Quick Start visible en navegación principal");
+        const projectDocs = await page.$$eval(".sales-footer a", links => links.filter(link => link.textContent.trim() === "Documentación del proyecto").map(link => ({href:link.href,target:link.target,rel:link.rel})));
+        assert.equal(projectDocs.length, 1, name + ": acceso a documentación del proyecto");
+        assert.equal(projectDocs[0].href, "https://claude.ai/artifact/FUM1c3DuGiFqgQw5Yv4ygL", name + ": URL de documentación actualizada");
+        assert.equal(projectDocs[0].target, "_blank");
+        assert.ok(projectDocs[0].rel.includes("noopener") && projectDocs[0].rel.includes("noreferrer"));
+        if (name === "documentacion") {
+          assert.equal(await page.$$(".resource-card").then(cards => cards.length), 2, "Documentación: tarjeta Desarrollo abierto eliminada");
+          assert.ok(await page.$$eval(".resource-card h3", titles => titles.every(title => !title.textContent.includes("Desarrollo abierto"))));
+          assert.equal(await page.$eval(".resource-featured .button-primary", link => link.href), "https://claude.ai/artifact/FUM1c3DuGiFqgQw5Yv4ygL");
+          if (viewport.label === "desktop") await page.screenshot({path:path.join(previews,"documentacion-desktop.png"),fullPage:true});
+        }
         assert.deepEqual(await page.$$eval("img", imgs => imgs.filter(img => !img.complete || !img.naturalWidth).map(img => img.src)), [], name + ": imágenes disponibles");
         const links = await page.$$eval("a[href]", anchors => anchors.map(anchor => anchor.href));
         for (const href of links) {

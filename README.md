@@ -73,7 +73,9 @@ Use case: precise-object-edit. Edit target: the attached portrait of Santiago fo
 </details>
 
 ## Documento del proyecto
-`documento-proyecto.html` adapta íntegramente el texto proporcionado por el equipo y se abre desde Documentación. Contiene índice navegable, control de cambios, responsables, alcance, requisitos y las secciones 2 a 8 con su numeración original. Los apartados vacíos se indican como pendientes; las notas de trabajo se expresan como tareas sin inventar resultados, prioridades, presupuestos ni firmas.
+El enlace «Documentación del proyecto» de los siete pies y el botón principal de Documentación abren https://claude.ai/artifact/FUM1c3DuGiFqgQw5Yv4ygL en una pestaña nueva. La tarjeta «Desarrollo abierto» se retiró de los recursos; se conservan los otros enlaces y archivos del proyecto.
+
+`documento-proyecto.html` conserva la adaptación local del texto proporcionado por el equipo, pero ya no es el destino del botón principal de Documentación. Contiene índice navegable, control de cambios, responsables, alcance, requisitos y las secciones 2 a 8 con su numeración original. Los apartados vacíos se indican como pendientes; las notas de trabajo se expresan como tareas sin inventar resultados, prioridades, presupuestos ni firmas.
 
 El archivo `assets/documents/documentacion-original.txt` conserva el adjunto completo, sin cambios, y puede descargarse desde la página. La adaptación distingue el planteo inicial MQTT/XLS del funcionamiento local HTTP/CSV presentado en el sitio. Las hipótesis institucionales se atribuyen a los autores del borrador y las mejoras previstas no se presentan como implementadas.
 
