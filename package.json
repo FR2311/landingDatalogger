@@ -1,0 +1,13 @@
+{
+  "name": "datalogger-product-landing",
+  "version": "1.0.0",
+  "private": true,
+  "engines": { "node": ">=22.12.0" },
+  "scripts": {
+    "test": "node tests/sales-smoke.cjs",
+    "test:ui": "node tests/sales-smoke.cjs"
+  },
+  "devDependencies": {
+    "puppeteer": "25.16.0"
+  }
+}

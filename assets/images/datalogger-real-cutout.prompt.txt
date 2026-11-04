@@ -1,0 +1,11 @@
+Edición con la herramienta integrada image_gen, modo background-extraction.
+Original conservado: dataloggerReal.webp
+Objetivo: versión con transparencia para el hero, sin marco ni fondo rectangular.
+
+Prompt utilizado:
+Use case: background-extraction.
+Asset type: transparent product-photo cutout for the existing Datalogger landing-page hero.
+Input Image 1 is the EDIT TARGET, the actual product photograph, not a design reference.
+Primary request: remove ONLY the entire white/gray background and floor shadow. Keep only the real black datalogger as a clean cutout on a genuinely transparent alpha background.
+Preserve the exact existing device, full silhouette and three-quarter angle: rough black enclosure, rectangular illuminated display in its original position, large red front push button, small red side button and side connector. Preserve all original material texture, proportions, orientation, edge geometry, colors and lighting. Preserve the original tiny display content as-is; do not redraw digits, invent labels, simplify features, add a logo or beautify/rebuild the product.
+Composition: full device visible, centered, with approximately 6 percent transparent padding on all sides, no clipped corners. No background rectangle, white haze, checkerboard pixels, frame, floor, props, pedestal or new text. This is background removal of an existing photograph, NOT a new render.

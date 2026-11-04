@@ -5,7 +5,7 @@
   document.body.classList.add("js");
   const menuButton = document.querySelector(".menu-toggle");
   const navigation = document.querySelector("#main-nav");
-  const mobileViewport = window.matchMedia("(max-width: 1250px)");
+  const mobileViewport = window.matchMedia("(max-width: 900px)");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   const topLink = document.querySelector(".back-to-top");
 
@@ -87,6 +87,121 @@
   topLink.addEventListener("blur", updateTopLink);
   updateTopLink();
 
+
+  // Galería con mejora progresiva: sin JavaScript se conservan las cinco vistas.
+  document.querySelectorAll("[data-gallery]").forEach((gallery, galleryIndex) => {
+    const tablist = gallery.querySelector(".gallery-tabs");
+    const tabs = [...tablist.querySelectorAll(".gallery-tab")];
+    const panels = tabs.map(tab => document.getElementById(tab.hash.slice(1)));
+    if (!tabs.length || panels.some(panel => !panel)) return;
+
+    tablist.setAttribute("role", "tablist");
+    const select = (index, focus = false) => {
+      tabs.forEach((tab, current) => {
+        const active = current === index;
+        tab.setAttribute("aria-selected", String(active));
+        tab.tabIndex = active ? 0 : -1;
+        tab.classList.toggle("is-active", active);
+        panels[current].hidden = !active;
+      });
+      if (focus) tabs[index].focus({ preventScroll: true });
+    };
+    tabs.forEach((tab, index) => {
+      tab.id = `gallery-${galleryIndex}-tab-${index}`;
+      tab.setAttribute("role", "tab");
+      tab.setAttribute("aria-controls", panels[index].id);
+      panels[index].setAttribute("role", "tabpanel");
+      panels[index].setAttribute("aria-labelledby", tab.id);
+      panels[index].tabIndex = 0;
+      tab.addEventListener("click", event => {
+        event.preventDefault();
+        select(index);
+        try { history.replaceState(null, "", tab.hash); } catch { /* file:// conserva la navegación local. */ }
+      });
+      tab.addEventListener("keydown", event => {
+        let next;
+        if (event.key === "ArrowRight") next = (index + 1) % tabs.length;
+        if (event.key === "ArrowLeft") next = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "Home") next = 0;
+        if (event.key === "End") next = tabs.length - 1;
+        if (event.key === " ") next = index;
+        if (next === undefined) return;
+        event.preventDefault();
+        select(next, true);
+      });
+    });
+    const selectHash = () => {
+      const selected = tabs.findIndex(tab => tab.hash === location.hash);
+      if (selected >= 0) select(selected);
+    };
+    const initial = tabs.findIndex(tab => tab.hash === location.hash);
+    select(initial >= 0 ? initial : 0);
+    window.addEventListener("hashchange", selectHash);
+  });
+  // Ampliación local: se usa el original, sin rehacer letras ni mediciones.
+  if (document.body.classList.contains("sales-page") && typeof HTMLDialogElement !== "undefined") {
+    const viewer = document.createElement("dialog");
+    viewer.className = "image-viewer";
+    viewer.setAttribute("aria-labelledby", "viewer-title");
+    viewer.innerHTML = `<header class="viewer-topbar"><h2 id="viewer-title">Imagen del producto</h2><button class="viewer-close" type="button" aria-label="Cerrar imagen">×</button></header><div class="viewer-stage"></div><footer class="viewer-actions"><button type="button" data-viewer-zoom aria-pressed="false">Ver tamaño original</button><span data-viewer-info>Archivo original</span><a data-viewer-original target="_blank" rel="noopener noreferrer">Abrir original ↗</a></footer>`;
+    document.body.append(viewer);
+    const stage = viewer.querySelector(".viewer-stage");
+    const zoom = viewer.querySelector("[data-viewer-zoom]");
+    const info = viewer.querySelector("[data-viewer-info]");
+    const original = viewer.querySelector("[data-viewer-original]");
+    let image;
+    let returnFocus;
+    const resetZoom = () => {
+      stage.classList.remove("is-native");
+      zoom.setAttribute("aria-pressed", "false");
+      zoom.textContent = "Ver tamaño original";
+      stage.scrollTo(0, 0);
+    };
+    viewer.querySelector(".viewer-close").addEventListener("click", () => viewer.close());
+    zoom.addEventListener("click", () => {
+      const nativeSize = stage.classList.toggle("is-native");
+      zoom.setAttribute("aria-pressed", String(nativeSize));
+      zoom.textContent = nativeSize ? "Ajustar a pantalla" : "Ver tamaño original";
+      stage.scrollTo(0, 0);
+    });
+    viewer.addEventListener("close", () => {
+      document.body.classList.remove("has-image-viewer");
+      resetZoom();
+      returnFocus?.focus({ preventScroll: true });
+    });
+    viewer.addEventListener("click", event => {
+      const rect = viewer.getBoundingClientRect();
+      if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) viewer.close();
+    });
+    document.addEventListener("click", event => {
+      const link = event.target.closest("a[href]");
+      if (!link || link.closest(".image-viewer") || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey || event.button !== 0) return;
+      const url = new URL(link.href, location.href);
+      if (!/\/assets\/images\/[^/]+\.(?:png|jpe?g|webp)$/i.test(url.pathname)) return;
+      event.preventDefault();
+      if (!image) {
+        image = document.createElement("img");
+        stage.append(image);
+      }
+      const source = link.querySelector("img") || link.closest("article,figure")?.querySelector("img");
+      const title = source?.alt || "Imagen de Datalogger";
+      viewer.querySelector("#viewer-title").textContent = title;
+      image.alt = title;
+      info.textContent = "Cargando archivo original…";
+      zoom.disabled = true;
+      image.onload = () => {
+        info.textContent = image.naturalWidth + " × " + image.naturalHeight + " px · Archivo original";
+        zoom.disabled = false;
+      };
+      image.onerror = () => { info.textContent = "No se pudo abrir la imagen. Usá el enlace al original."; };
+      image.src = url.href;
+      original.href = url.href;
+      resetZoom();
+      returnFocus = link;
+      viewer.showModal();
+      document.body.classList.add("has-image-viewer");
+    });
+  }
   if ("IntersectionObserver" in window) {
     const animatedElements = document.querySelectorAll(".reveal");
     if (!reducedMotion.matches) {
