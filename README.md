@@ -8,6 +8,8 @@ La portada explica qué permite hacer Datalogger: consultar temperatura, humedad
 
 El menú compartido es Producto, Beneficios, Paneles, Equipo y Quick Start. Quick Start está visible en el encabezado de las siete páginas y dentro del menú móvil; también se conserva el enlace «Primeros pasos» del pie. `styles.css` conserva los estilos de las guías y `product.css` define la identidad comercial, los contrastes, la portada, el equipo y la galería.
 
+Todos los enlaces al repositorio del proyecto utilizan https://github.com/proyectofinal7ano-spec/Datalogger-INTI-Code. Las URL de licencias y dependencias de terceros se conservan.
+
 La nueva dirección visual usa un hero azul profundo y el mensaje «Tu ambiente, en perspectiva». El dispositivo se presenta vertical, sin inclinación, con tamaño destacado, sin tarjeta ni fondo rectangular y con la silueta completa. Los beneficios se presentan en tres columnas editoriales, el recorrido combina texto azul y capturas completas, y Temperatura, Humedad y Presión se muestran también en tres vistas previas juntas. El equipo conserva cinco integrantes en fila en escritorio, con fotografías de 72 px; en pantallas pequeñas se reorganiza. El visor y los documentos existentes se mantienen.
 
 ## Páginas
